@@ -1,0 +1,106 @@
+﻿@model IEnumerable<TablasDeMultiplicar.Models.EjerciciosModel>
+
+@{
+    ViewData["Title"] = "Ejercicios Muy Fáciles para practicar";
+}
+
+    <div class="mb-md-3 d-none d-md-block">
+        @*<h2>Practica las tablas de multiplicar</h2>*@
+        <h3>Acierta el resultado correcto</h3>
+        <h5>Si te equivocas no pasa nada, vuelve a intentarlo</h5>
+    </div>
+
+
+<div style="text-align:center" class="mx-auto">
+
+    @foreach (var item in Model)
+    {
+
+        <div class="row p-1 pb-1 mb-2 border">
+
+            <div class="col-3 col-sm-2 col-md-2 multiplicacion p-1" result="@item.Result" style="text-align:right">
+                <spam style="font-weight:700">
+                    @Html.DisplayFor(modelItem => item.M1) X  @Html.DisplayFor(modelItem => item.M2)
+                </spam>
+            </div>
+
+            <div class="col-6 col-sm-6 col-md-3 p1">
+                @foreach (var itemOption in item.Options)
+                {
+                    <button type="button" class="btn btn-primary btn-sm btn-resultado @(@itemOption == @item.Result ? "correcto" : "incorrecto")" style="width:30px; text-align:center">@itemOption</button>
+                }
+
+            </div>
+
+            <div class="col-3 col-sm-3 col-md-3 viewresult" style="text-align:left">
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<button type="button" class="btn btn-info reload" style="margin-left:-15px">Empezar de nuevo</button>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><img class='img-fluid' style='max-height:32px' src='/images/happy.png' /> Muy Bien !!!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Has Acabado los ejercicios y los has hecho todos bien !!!
+            </div>
+            <div class="modal-footer">
+
+                <a class="btn btn-secondary" asp-controller="Tablas" asp-action="Index">Ir a ver las Tablas</a>
+                <button type="button" class="btn btn-primary reload">Volver a Jugar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        var contador = 0;
+        var totalEjercicios = $('.multiplicacion').length;
+
+        $(document).ready(function () {
+            $(".btn-resultado").click(function () {
+                var result = $(this).closest(".row").find(".multiplicacion").attr("result").trim();
+                var buttonText = $(this).text().trim();
+                var viewresult = $(this).closest(".row").find(".viewresult")
+                viewresult.hide();
+
+                if (buttonText === result) {
+
+                    $(this).removeClass("btn-primary").addClass("btn-success").addClass('disabled').attr("disabled", true);
+                    $(this).closest(".row").find(".btn-resultado.incorrecto").addClass('disabled').attr("disabled", true).text("X");  //.css("text-decoration", "line-through")
+                    viewresult.empty().text("Bien! ").append("<img class='img-fluid' style='max-height:32px' src='/images/happy.png'/>");
+                    viewresult.fadeIn("slow");
+                    contador++;
+                }
+                else {
+                    $(this).removeClass("btn-primary").addClass("btn-danger").addClass('disabled').attr("disabled", true).text("X");
+                    viewresult.empty().text("Ohhh! ").append("<img class='img-fluid' style='max-height:32px' src='/images/confused.png'/>")
+                    viewresult.fadeIn("slow");
+                }
+                //var buttonsToDisable = $(this).closest(".row").find(".btn-resultado.incorrecto").fadeOut("slow");
+
+                if (contador == totalEjercicios) {
+                    $('#exampleModalCenter').modal();
+                }
+
+            });
+        });
+
+         $('.reload').click(function() {  
+                location.reload();  
+            });  
+
+    </script>
+}

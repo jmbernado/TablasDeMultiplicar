@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Aprende a Multiplicar Facilmente. Tablas de multiplicar, recursos y ejercicios resueltos para practicar gratis y sin registro" />
+
+    <meta name="keywords" content="Aprende a multiplicar, practicar multiplicaciones, tablas de multiplicar" />
+    <meta name="title" content="Aprende a Multiplicar - Tablas de Multiplicar www.aprendeamultiplicar.com" />
+    <meta name="subject" content="Aprende a Multiplicar Facilmente. Tablas de multiplicar, recursos y ejercicios resueltos para practicar gratis y sin registro" />
+    <meta name="Author" content="Joan M. Bernadó" />
+    <meta name="copyright" content="(c) 2020 Joan M. Bernadó. Todos los derechos reservados" />
+    <meta name="robots" content="index,follow" />
+    <meta name="language" content="spanish" />
+    <meta name="revisit" content="7 days" />
+    <meta name="distribution" content="global" />
+    <link rel="canonical" href="https://www.aprendeamultiplicar.com" />
+
+
+    <title>Aprende a Multiplicar - Tablas de Multiplicar www.aprendeamultiplicar.com</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous" />
+    </environment>
+
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160160188-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-160160188-1');
+    </script>
+
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Tablas" asp-action="Index">Tablas De Multiplicar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Juegos Muy Faciles</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="1">Tabla del 1</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="2">Tabla del 2</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="3">Tabla del 3</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="4">Tabla del 4</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="5">Tabla del 5</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="6">Tabla del 6</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="7">Tabla del 7</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="8">Tabla del 8</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="9">Tabla del 9</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="10">Tabla del 10</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="muyfaciles" asp-route-tabla="99">Todas</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Juegos Faciles</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="1">Tabla del 1</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="2">Tabla del 2</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="3">Tabla del 3</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="4">Tabla del 4</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="5">Tabla del 5</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="6">Tabla del 6</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="7">Tabla del 7</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="8">Tabla del 8</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="9">Tabla del 9</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="10">Tabla del 10</a>
+                                <a class="dropdown-item" asp-controller="Ejercicios" asp-action="faciles" asp-route-tabla="99">Todas</a>
+                            </div>
+                        </li>
+
+
+
+                        @*<li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Ejercicios" asp-action="Index">Juegos</a>
+        </li>*@
+                        @*<li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </li>*@
+                    </ul>
+                    </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-sm-1">
+            @RenderBody()
+        </main>
+    </div>
+
+    @*<footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2020 - TablasDeMultiplicar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
+                crossorigin="anonymous"></script>
+
+    </environment>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
