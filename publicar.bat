@@ -1,1 +1,0 @@
-scp -rp C:\Users\Joan\Desktop\Projectes\TablasDeMultiplicar\bin\Release\netcoreapp3.1\publish\. joan@20.188.44.202:/var/www/TablasDeMultiplicar
