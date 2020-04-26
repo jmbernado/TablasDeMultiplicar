@@ -41,6 +41,7 @@
 
         gtag('config', 'UA-160160188-1');
     </script>
+    @RenderSection("Styles", required: false)
 
 
 </head>
@@ -92,19 +93,19 @@
 
 
                         @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Ejercicios" asp-action="Index">Juegos</a>
-        </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Ejercicios" asp-action="Index">Juegos</a>
+                            </li>*@
                         @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>*@
                     </ul>
-                    </div>
+                </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-sm-1">
+        <main role="main" class="pb-sm-1" id="app">
             @RenderBody()
         </main>
     </div>
@@ -122,12 +123,11 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                 integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
                 crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
                 crossorigin="anonymous"></script>
 
     </environment>
-
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

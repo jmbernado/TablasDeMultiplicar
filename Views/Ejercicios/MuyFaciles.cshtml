@@ -4,43 +4,27 @@
     ViewData["Title"] = "Ejercicios Muy Fáciles para practicar";
 }
 
-    <div class="mb-md-3 d-none d-md-block">
-        @*<h2>Practica las tablas de multiplicar</h2>*@
-        <h3>Acierta el resultado correcto</h3>
-        <h5>Si te equivocas no pasa nada, vuelve a intentarlo</h5>
-    </div>
+<div class="mb-md-3 d-none d-md-block">
+    @*<h2>Practica las tablas de multiplicar</h2>*@
+    <h3>Acierta el resultado correcto</h3>
+    <h5>Si te equivocas no pasa nada, vuelve a intentarlo</h5>
+</div>
 
 
 <div style="text-align:center" class="mx-auto">
 
     @foreach (var item in Model)
     {
+        <buttons-result m1=@item.M1
+                        m2=@item.M2
+                        options=@Html.Raw(Json.Serialize(@item.Options))>
+        </buttons-result>
 
-        <div class="row p-1 pb-1 mb-2 border">
-
-            <div class="col-3 col-sm-2 col-md-2 multiplicacion p-1" result="@item.Result" style="text-align:right">
-                <spam style="font-weight:700">
-                    @Html.DisplayFor(modelItem => item.M1) X  @Html.DisplayFor(modelItem => item.M2)
-                </spam>
-            </div>
-
-            <div class="col-6 col-sm-6 col-md-3 p1">
-                @foreach (var itemOption in item.Options)
-                {
-                    <button type="button" class="btn btn-primary btn-sm btn-resultado @(@itemOption == @item.Result ? "correcto" : "incorrecto")" style="width:30px; text-align:center">@itemOption</button>
-                }
-
-            </div>
-
-            <div class="col-3 col-sm-3 col-md-3 viewresult" style="text-align:left">
-
-            </div>
-        </div>
     }
 
 </div>
 
-<button type="button" class="btn btn-info reload" style="margin-left:-15px">Empezar de nuevo</button>
+<button type="button" class="btn btn-info" v-on:click="reload()" style="margin-left:-15px">Empezar de nuevo</button>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -57,50 +41,168 @@
             <div class="modal-footer">
 
                 <a class="btn btn-secondary" asp-controller="Tablas" asp-action="Index">Ir a ver las Tablas</a>
-                <button type="button" class="btn btn-primary reload">Volver a Jugar</button>
+                <button type="button" class="btn btn-primary" v-on:click="reload()">Volver a Jugar</button>
             </div>
         </div>
     </div>
 </div>
 
+@section Styles{
+    <style type="text/css">
+        .fade-enter-active
+        {
+            transition: opacity 2s
+        }
+
+        .fade-leave-active {
+            transition: opacity 0s
+        }
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0
+        }
+    </style>
+}
 
 @section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
-        var contador = 0;
-        var totalEjercicios = $('.multiplicacion').length;
+        Vue.component('buttons-result', {
+            props: ['m1', 'm2', 'options' ],
+            data: function () {
+                         return {
+                             buttons_clicked:[],
+                             finalizado: false,
+                             textResultado: '',
+                             imageSrc: '',
+                        }
+                },
 
-        $(document).ready(function () {
-            $(".btn-resultado").click(function () {
-                var result = $(this).closest(".row").find(".multiplicacion").attr("result").trim();
-                var buttonText = $(this).text().trim();
-                var viewresult = $(this).closest(".row").find(".viewresult")
-                viewresult.hide();
+            template: `<div>
+                            <div class="row p-1 pb-1 mb-2 border">
+                                <div class="col-3 col-sm-2 col-md-2 p-1" style="text-align:right">
+                                    <span style="font-weight:700">
+                                        {{m1}} X {{m2}}
+                                    </span>
+                                </div>
 
-                if (buttonText === result) {
+                                <div class="col-6 col-sm-6 col-md-3 p1">
+                                    <button type="button"  v-for="item of JSON.parse(options)"
+                                            class="btn btn-sm btn-resultado"
+                                            v-bind:disabled="buttons_clicked.includes(item) || finalizado"
+                                            v-bind:class="{ 'btn-primary':!buttons_clicked.includes(item),
+                                                            'btn-danger': buttons_clicked.includes(item) && !esCorrecto(m1,m2, item),
+                                                            'btn-success': buttons_clicked.includes(item) && esCorrecto(m1,m2, item) }"
+                                            style="width:30px; text-align:center;
+                                            margin-right:2px"
+                                            v-on:click="click(m1,m2, item)">
+                                            <span v-if="(buttons_clicked.includes(item) || finalizado )&& !esCorrecto(m1,m2, item)">X</span>
+                                            <span v-else>{{item}}</span>
+                                    </button>
+                                </div>
 
-                    $(this).removeClass("btn-primary").addClass("btn-success").addClass('disabled').attr("disabled", true);
-                    $(this).closest(".row").find(".btn-resultado.incorrecto").addClass('disabled').attr("disabled", true).text("X");  //.css("text-decoration", "line-through")
-                    viewresult.empty().text("Bien! ").append("<img class='img-fluid' style='max-height:32px' src='/images/happy.png'/>");
-                    viewresult.fadeIn("slow");
-                    contador++;
+                                <div class="col-3 col-sm-3 col-md-3" style = "text-align:left" >
+                                    <transition name="fade">
+                                        <div v-if="textResultado!=''">
+                                            {{textResultado}}<img class='img-fluid' style='max-height:32px' v-bind:src="imageSrc"/>
+                                        </div>
+                                    </transition>
+                                </div>
+                            </div>
+                        </div>
+                        `,
+            methods: {
+                click: function (x, y, item) {
+                    const index = this.buttons_clicked.indexOf(item)
+                    if (index == -1) {
+                        this.buttons_clicked.push(item)
+                    }
+
+                    if (x * y === item) {
+                        this.finalizado = true
+                        this.$root.$emit('inc_counter')
+                        this.textResultado = 'Bien!!!! '
+                        this.imageSrc = '/images/happy.png'
+                    } else {
+                        this.textResultado = 'Ohhhh!!! '
+                        this.imageSrc = '/images/confused.png'
+                    }
+                },
+
+                esCorrecto: function (x, y, item) {
+                    return x*y===item
                 }
-                else {
-                    $(this).removeClass("btn-primary").addClass("btn-danger").addClass('disabled').attr("disabled", true).text("X");
-                    viewresult.empty().text("Ohhh! ").append("<img class='img-fluid' style='max-height:32px' src='/images/confused.png'/>")
-                    viewresult.fadeIn("slow");
-                }
-                //var buttonsToDisable = $(this).closest(".row").find(".btn-resultado.incorrecto").fadeOut("slow");
+            }
+        })
 
-                if (contador == totalEjercicios) {
-                    $('#exampleModalCenter').modal();
-                }
 
-            });
-        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                exercicescount:@Model.Count(),
+                count: 0
+            },
 
-         $('.reload').click(function() {  
-                location.reload();  
-            });  
+            created() {
+                this.$root.$on('inc_counter', () => {
+                    this.count = this.count + 1;
+
+                    if (this.count == this.exercicescount) {
+                        $('#exampleModalCenter').modal();
+                        console.log('finalizado')
+                    }
+                })
+            },
+            methods: {
+                reload: function() {
+                    location.reload();
+                 },
+            }
+        })
 
     </script>
+
+
+
+
+    @*<script>
+            var contador = 0;
+            var totalEjercicios = $('.multiplicacion').length;
+
+            $(document).ready(function () {
+                $(".btn-resultado").click(function () {
+                    var result = $(this).closest(".row").find(".multiplicacion").attr("result").trim();
+                    var buttonText = $(this).text().trim();
+                    var viewresult = $(this).closest(".row").find(".viewresult")
+                    viewresult.hide();
+
+                    if (buttonText === result) {
+
+                        $(this).removeClass("btn-primary").addClass("btn-success").addClass('disabled').attr("disabled", true);
+                        $(this).closest(".row").find(".btn-resultado.incorrecto").addClass('disabled').attr("disabled", true).text("X");  //.css("text-decoration", "line-through")
+                        viewresult.empty().text("Bien! ").append("<img class='img-fluid' style='max-height:32px' src='/images/happy.png'/>");
+                        viewresult.fadeIn("slow");
+                        contador++;
+                    }
+                    else {
+                        $(this).removeClass("btn-primary").addClass("btn-danger").addClass('disabled').attr("disabled", true).text("X");
+                        viewresult.empty().text("Ohhh! ").append("<img class='img-fluid' style='max-height:32px' src='/images/confused.png'/>")
+                        viewresult.fadeIn("slow");
+                    }
+                    //var buttonsToDisable = $(this).closest(".row").find(".btn-resultado.incorrecto").fadeOut("slow");
+
+                    if (contador == totalEjercicios) {
+                        $('#exampleModalCenter').modal();
+                    }
+
+                });
+            });
+
+             $('.reload').click(function() {
+                    location.reload();
+                });
+
+        </script>*@
 }

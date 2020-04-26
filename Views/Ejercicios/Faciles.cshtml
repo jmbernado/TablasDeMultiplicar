@@ -4,40 +4,25 @@
     ViewData["Title"] = "Ejercicios Fáciles para practicar";
 }
 
-    <div class="mb-md-3 d-none d-md-block">
-        @*<h2>Practica las tablas de multiplicar</h2>*@
-        <h3>Introduce el resultado correcto</h3>
-        <h5>Si te equivocas no pasa nada, vuelve a intentarlo</h5>
-    </div>
+<div class="mb-md-3 d-none d-md-block">
+    @*<h2>Practica las tablas de multiplicar</h2>*@
+    <h3>Introduce el resultado correcto</h3>
+    <h5>Si te equivocas no pasa nada, vuelve a intentarlo</h5>
+</div>
 
 
 <div style="text-align:center" class="mx-auto">
 
     @foreach (var item in Model)
     {
-
-        <div class="row p-1 pb-1 mb-2 border">
-
-            <div class="col-3 col-sm-2 col-md-2 multiplicacion p-1" result="@item.Result" style="text-align:right">
-                <spam style="font-weight:700">
-                    @Html.DisplayFor(modelItem => item.M1) X  @Html.DisplayFor(modelItem => item.M2)
-                </spam>
-            </div>
-
-            <div class="col-4 col-sm-4 col-md-2 p1">
-                <input type="number" class="resultado form-control">
-
-            </div>
-
-            <div class="col-5 col-sm-5 col-md-3 viewresult" style="text-align:left">
-
-            </div>
-        </div>
+        <excersise-line m1=@item.M1
+                        m2=@item.M2>
+        </excersise-line>
     }
 
 </div>
 
-<button type="button" class="btn btn-info reload" style="margin-left:-15px">Empezar de nuevo</button>
+<button type="button" class="btn btn-info" v-on:click="reload()" style="margin-left:-15px">Empezar de nuevo</button>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -54,63 +39,189 @@
             <div class="modal-footer">
 
                 <a class="btn btn-secondary" asp-controller="Tablas" asp-action="Index">Ir a ver las Tablas</a>
-                <button type="button" class="btn btn-primary reload">Volver a Jugar</button>
+                <button type="button" class="btn btn-primary" v-on:click="reload()">Volver a Jugar</button>
             </div>
         </div>
     </div>
 </div>
 
+@section Styles{
+    <style type="text/css">
+        .fade-enter-active {
+            transition: opacity 2s
+        }
+
+        .fade-leave-active {
+            transition: opacity 0s
+        }
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0
+        }
+    </style>
+}
+
+@*v-on:keyup="change(m1,m2, $event)"*@
 
 @section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
-        var contador = 0;
-        var totalEjercicios = $('.multiplicacion').length;
+        Vue.component('excersise-line', {
+            props: ['m1', 'm2'],
+            data: function () {
+                         return {
+                             finalizado: false,
+                             textResultado: '',
+                             inputResultado: '',
+                             imageSrc: '',
+                             resultlen:0
+                        }
+                },
 
-        $(document).ready(function () {
+            template: ` <div class="row p-1 pb-1 mb-2 border">
+                            <div class="col-3 col-sm-2 col-md-2 p-1"  style="text-align:right">
+                                <span style="font-weight:700">
+                                   {{m1}} X {{m2}}
+                                </span>
+                            </div>
 
-            $(':input:enabled:visible:first').focus();
+                            <div class="col-4 col-sm-4 col-md-2 p1">
+                                <input type="number"
+                                class="form-control resultado"
+                                v-on:keyup="change(m1,m2)"
+                                v-model="inputResultado"
+                                v-bind:disabled="finalizado"
+                                 >
+                            </div>
+
+                            <div class="col-5 col-sm-5 col-md-5" style = "text-align:left" >
+                                <transition name="fade">
+                                    <div v-if="textResultado!=''">
+                                        {{textResultado}}<img class='img-fluid' style='max-height:32px' v-bind:src="imageSrc"/>
+                                    </div>
+                                </transition>
+                            </div>
 
 
-            $(".resultado").keyup(function () {
-                var result = $(this).closest(".row").find(".multiplicacion").attr("result").trim();
-                var resultadoIntroducido = $(this).val().trim();
-                var viewresult = $(this).closest(".row").find(".viewresult")
 
-                viewresult.hide();
+                        </div>
+                        `,
+            methods: {
+                change: function (x, y, event) {
 
-                if (resultadoIntroducido === "") {
-                    return;
-                }
+                    resultlen = x * y;
+                    console.log(this.$refs);
 
-                if (resultadoIntroducido.length < result.length) {
-                    return;
-                }
-
-                if (resultadoIntroducido === result) {
-
-                    viewresult.empty().text("Bien! ").append("<img class='img-fluid' style='max-height:32px' src='/images/happy.png'/>");
-                    viewresult.fadeIn("slow");
-                    contador++;
-                    if (contador == totalEjercicios) {
-                        $('#exampleModalCenter').modal();
+                    if (this.inputResultado.length < resultlen.toString().length) {
+                        this.textResultado = ''
+                        this.imageSrc = ''
+                        console.log('lenght ' + this.inputResultado.length + ' '+ resultlen.toString().length)
                         return;
                     }
 
-                    var nextInput = $('.resultado').index(this) + 1;
-                    $('.resultado')[nextInput].focus()
-                }
-                else {
-                    viewresult.empty().text("Ohhh! ").append("<img class='img-fluid' style='max-height:32px' src='/images/confused.png'/>")
-                    viewresult.fadeIn("slow");
-                }
+                    if (x * y == this.inputResultado) {
+                        this.finalizado = true
+                        this.$root.$emit('inc_counter')
+                        this.textResultado = 'Bien!!!! '
+                        this.imageSrc = '/images/happy.png'
+                        console.log('resultadook')
+                        this.$nextTick(() => {
+                            $(':input:enabled:visible:first').focus();
+                        })
 
-            });
-        });
+                    } else {
+                        this.textResultado = 'Ohhhh!!! '
+                        this.imageSrc = '/images/confused.png'
+                        console.log('resultadoko')
+                    }
+                },
 
-         $('.reload').click(function() {  
-             location.reload();  
-             $(':input:enabled:visible:first').focus();
-            });  
+                esCorrecto: function (x, y, item) {
+                    return x*y===item
+                }
+            }
+        })
+
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                exercicescount:@Model.Count(),
+                count: 0
+            },
+
+            created() {
+                this.$root.$on('inc_counter', () => {
+                    this.count = this.count + 1;
+
+                    if (this.count == this.exercicescount) {
+                        $('#exampleModalCenter').modal();
+                        console.log('finalizado')
+                    }
+                })
+            },
+            methods: {
+                reload: function() {
+                    location.reload();
+                 },
+            }
+        })
 
     </script>
+
+
+
+    @*<script>
+            var contador = 0;
+            var totalEjercicios = $('.multiplicacion').length;
+
+            $(document).ready(function () {
+
+                $(':input:enabled:visible:first').focus();
+
+
+                $(".resultado").keyup(function () {
+                    var result = $(this).closest(".row").find(".multiplicacion").attr("result").trim();
+                    var resultadoIntroducido = $(this).val().trim();
+                    var viewresult = $(this).closest(".row").find(".viewresult")
+
+                    viewresult.hide();
+
+                    if (resultadoIntroducido === "") {
+                        return;
+                    }
+
+                    if (resultadoIntroducido.length < result.length) {
+                        return;
+                    }
+
+                    if (resultadoIntroducido === result) {
+
+                        viewresult.empty().text("Bien! ").append("<img class='img-fluid' style='max-height:32px' src='/images/happy.png'/>");
+                        viewresult.fadeIn("slow");
+                        contador++;
+                        if (contador == totalEjercicios) {
+                            $('#exampleModalCenter').modal();
+                            return;
+                        }
+
+                        var nextInput = $('.resultado').index(this) + 1;
+                        $('.resultado')[nextInput].focus()
+                    }
+                    else {
+                        viewresult.empty().text("Ohhh! ").append("<img class='img-fluid' style='max-height:32px' src='/images/confused.png'/>")
+                        viewresult.fadeIn("slow");
+                    }
+
+                });
+            });
+
+             $('.reload').click(function() {
+                 location.reload();
+                 $(':input:enabled:visible:first').focus();
+                });
+
+        </script>*@
 }
